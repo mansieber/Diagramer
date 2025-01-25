@@ -11,14 +11,11 @@ CONFIG += c++17
 SOURCES += \
     clientconnection.cpp \
     main.cpp \
-    mainwindow.cpp \
-    tcpserver.cpp
-
+    mainwindow.cpp
 HEADERS += \
     clientconnection.h \
     commandprocessorinterface.h \
-    mainwindow.h \
-    tcpserver.h
+    mainwindow.h
 
 FORMS += \
     mainwindow.ui
