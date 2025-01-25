@@ -1,35 +1,35 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "tcpserver.h"
+#include "commandprocessorinterface.h"
+#include "clientconnection.h"
 
 #include <QMainWindow>
-#include <QtNetwork/QTcpSocket>
-
-#define TCP_PORT 6178
 
 namespace Ui {
     class MainWindow;
 }
 
-class MainWindow : public QMainWindow
+class MainWindow : public QMainWindow, CommandProcessorInterface
 {
     Q_OBJECT
 
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void virtual setStatus(QString status);
+    void virtual processCommand(QString cmd);
 
 private:
     Ui::MainWindow *ui;
-    TcpServer * tcpServer;
-    QTcpSocket * tcpClient;
+    ClientConnection * clientConnect;
 
 private slots:
     void clearDebugOutput();
-    void connectionRequest();
-    void readClient();
-    void clientDisconnected();
+
+public slots:
+//    void virtual commandTriggered(QString cmd);
+
 };
 
 #endif // MAINWINDOW_H
