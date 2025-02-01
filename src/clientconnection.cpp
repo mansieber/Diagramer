@@ -4,19 +4,16 @@
 #include <QByteArray>
 #include <QDebug>
 
-ClientConnection::ClientConnection(CommandProcessorInterface * cp) {
-    cmdProc = cp;
+ClientConnection::ClientConnection() {
     server = new QTcpServer();
     qDebug() << "ClientConnection: server instantiated.";
 
     if ( ! server->listen(QHostAddress::Any, TCP_PORT) ) {
-        cmdProc->setStatus("Failed to bind to tcp port " + QString::number(TCP_PORT) + "!");
+        connectStatus = NO_BINDING;
     } else {
         connect(server, SIGNAL(newConnection()), this, SLOT(connectionRequest()));
-        cmdProc->setStatus("Listening for connections to port " + QString::number(TCP_PORT));
+        connectStatus = NO_CLIENT_CONNECTED;
     }
-
-//    connect(this, SIGNAL(newCommand(QString)), ( const QObject * ) ui, SLOT(commandTriggered(QString)));
 }
 
 ClientConnection::~ClientConnection() {
@@ -33,7 +30,8 @@ void ClientConnection::connectionRequest() {
     qDebug() << "Connection requested ...";
     connect(client, SIGNAL(readyRead()), this, SLOT(readClient()));
     connect(client, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
-    cmdProc->setStatus("Client connected");
+    connectStatus = CLIENT_CONNECTED;
+    emit newConnectionStatus("Client connected");
     qDebug() << "Connection established";
 }
 
@@ -45,8 +43,7 @@ void ClientConnection::readClient()
     QByteArray bytes = client->readAll();
     QString cmdString = QString::fromStdString(bytes.toStdString());
     qDebug() << bytes.size() << " bytes read: " << cmdString;
-//    emit newCommand(cmdString);
-    cmdProc->processCommand(cmdString);
+    emit newCommand(cmdString);
 }
 
 /*
@@ -54,8 +51,25 @@ void ClientConnection::readClient()
  */
 void ClientConnection::clientDisconnected() {
     client->deleteLater();
-    cmdProc->setStatus("Client disconnected ... Listening for connections");
+    connectStatus = NO_CLIENT_CONNECTED;
+    emit newConnectionStatus("Client disconnected ... Listening for connections");
     qDebug() << "Client disconnected";
 }
 
+/*
+ * Method updates the connection status.
+ */
+void ClientConnection::refreshConnectionStatus() {
+    switch ( connectStatus ) {
+    case NO_BINDING:
+        emit newConnectionStatus("Failed to bind to tcp port " + QString::number(TCP_PORT) + "!");
+        break;
+    case NO_CLIENT_CONNECTED:
+        emit newConnectionStatus("Listening for connections to port " + QString::number(TCP_PORT));
+        break;
+    case CLIENT_CONNECTED:
+        emit newConnectionStatus("Client connected");
+        break;
+    }
 
+}
