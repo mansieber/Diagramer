@@ -7,7 +7,7 @@
 ClientConnection::ClientConnection(CommandProcessorInterface * cp) {
     cmdProc = cp;
     server = new QTcpServer();
-    qDebug() << "Server instantiated";
+    qDebug() << "ClientConnection: server instantiated.";
 
     if ( ! server->listen(QHostAddress::Any, TCP_PORT) ) {
         cmdProc->setStatus("Failed to bind to tcp port " + QString::number(TCP_PORT) + "!");
@@ -22,6 +22,7 @@ ClientConnection::ClientConnection(CommandProcessorInterface * cp) {
 ClientConnection::~ClientConnection() {
     client->deleteLater();
     if ( server ) delete server;
+    qDebug() << "ClientConnection: client/server deleted.";
 }
 
 /*

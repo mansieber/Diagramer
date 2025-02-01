@@ -10,10 +10,12 @@ CONFIG += c++17
 
 SOURCES += \
     clientconnection.cpp \
+    commandprocessor.cpp \
     main.cpp \
     mainwindow.cpp
 HEADERS += \
     clientconnection.h \
+    commandprocessor.h \
     commandprocessorinterface.h \
     mainwindow.h
 

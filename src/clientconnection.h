@@ -13,7 +13,7 @@ class ClientConnection : public QObject
 {
     Q_OBJECT
 public:
-    ClientConnection(CommandProcessorInterface * cp);
+    ClientConnection(CommandProcessorInterface *);
     ~ClientConnection();
     bool isConnected();
 
@@ -28,7 +28,7 @@ private slots:
     void clientDisconnected();
 
 signals:
-    void newCommand(QString cmd);
+    void newCommand(QString cmdString);
 };
 
 #endif // CLIENTCONNECTION_H
