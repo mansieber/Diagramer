@@ -1,6 +1,8 @@
 # This file is used to ignore files which are generated
 # ----------------------------------------------------------------------------
 
+build-Diagramer-Desktop_Qt_6_7_0_MinGW_64_bit-Debug/
+build-Diagramer-Desktop_Qt_6_7_0_MinGW_64_bit-Release/
 *~
 *.autosave
 *.a

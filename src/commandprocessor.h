@@ -4,6 +4,7 @@
 #include "mainwindow.h"
 #include "clientconnection.h"
 
+#include <QObject>
 #include <QMap>
 #include <QRegularExpression>
 #include <QString>
@@ -13,13 +14,12 @@ enum comIDs {
     CREATE = 1, SCALE, PLOT
 };
 
-class CommandProcessor : CommandProcessorInterface
+class CommandProcessor : public QObject
 {
+    Q_OBJECT
 public:
     CommandProcessor();
     ~CommandProcessor();
-    void virtual setStatus(QString);
-    void virtual processCommand(QString);
 
 private:
     MainWindow * mainwindow;
@@ -30,7 +30,8 @@ private:
     int extractCmdId(QString, QStringList&);
 
 public slots:
-    //    void virtual commandTriggered(QString cmd);
+    void commandTriggered(QString);
+    void connectionStatusUpdate(QString);
 
 };
 

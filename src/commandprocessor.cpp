@@ -11,9 +11,13 @@ CommandProcessor::CommandProcessor() {
 
     initCmdList();
 
-    clientConnect = new ClientConnection(this);
+    clientConnect = new ClientConnection();
     qDebug() << "CommandProcessor: client connection created.";
 
+    connect(clientConnect, SIGNAL(newCommand(QString)), this, SLOT(commandTriggered(QString)));
+    connect(clientConnect, SIGNAL(newConnectionStatus(QString)), this, SLOT(connectionStatusUpdate(QString)));
+
+    clientConnect->refreshConnectionStatus();
 }
 
 CommandProcessor::~CommandProcessor() {
@@ -33,14 +37,14 @@ void CommandProcessor::initCmdList() {
 /*
  * Method outputs text in the status line.
  */
-void CommandProcessor::setStatus(QString status) {
+void CommandProcessor::connectionStatusUpdate(QString status) {
     mainwindow->setStatusLine(status);
 }
 
 /*
  * Method processes a command received via the connection.
  */
-void CommandProcessor::processCommand(QString cmdString) {
+void CommandProcessor::commandTriggered(QString cmdString) {
     int cmdId;
     QStringList cmdArgs;
 
