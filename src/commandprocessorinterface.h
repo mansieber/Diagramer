@@ -11,8 +11,8 @@ public:
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
-    void virtual setStatus(QString status) {};
-    void virtual processCommand(QString cmd) {};
+    void virtual setStatus(QString) {};
+    void virtual processCommand(QString) {};
 
 #pragma GCC diagnostic pop
 
